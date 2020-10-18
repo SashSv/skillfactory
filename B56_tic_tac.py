@@ -1,5 +1,5 @@
 import random
-
+# for test
 def printField(field):
     field = list(map(str, field))
     for i in range(0,len(field), 3):
