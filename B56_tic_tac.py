@@ -7,7 +7,6 @@ def printField(field):
         if i < 6:
             print("– | – | –")
 
-
 def checkWinner(field, mark):
     currentCombo = [i for i, d in enumerate(field) if d == mark] # все ходы игрока mark
     winCombos = [(0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 4, 8), (2, 4, 6), (0, 3, 6), (1, 4, 7), (2, 5, 8)]
@@ -39,7 +38,6 @@ def player(field, mark):
             return field, True # поле и игра продолжается
         else:
             print(f'Клетка {turn} занята либо отсуствует. Попробуйте снова.')
-
 
 def computer(field, mark):
     print('Ход компьютера!')
