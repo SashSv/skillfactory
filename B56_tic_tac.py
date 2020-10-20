@@ -1,5 +1,6 @@
 import random
 
+# функция печатает поле в его текущем виде
 def print_field(field):
     field = list(map(str, field))
     for i in range(0,len(field), 3):
@@ -7,6 +8,7 @@ def print_field(field):
         if i < 6:
             print("– | – | –")
 
+# функция проверяет победу игрока, который только что походил
 def checking_win(field, mark):
     turns_of_current_mark = [i for i, d in enumerate(field) if d == mark] # все ходы игрока mark
     combos_to_win = [(0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 4, 8), (2, 4, 6), (0, 3, 6), (1, 4, 7), (2, 5, 8)]
@@ -18,14 +20,13 @@ def checking_win(field, mark):
         if check:
             print(f'Игрок со знаком {mark} - победил!')
             return True
-
-    check = any(isinstance(i, int) for i in field)  # проверяем остались ли пустые клетки в принципе
+    check = any(isinstance(i, int) for i in field)  # проверяем остались ли еще ходы для следующего игрока
     if not check:
         print('Ничья!')
         return True
     return False
 
-
+# Ход игрока
 def player(field, mark):
     print('Ход игрока!')
     while True:
@@ -34,11 +35,12 @@ def player(field, mark):
             field[turn - 1] = mark
             print_field(field)
             if checking_win(field, mark):
-                return field, False # поле и игра закончилась
+                return field, False # поле и игра закончилась - как и тут
             return field, True # поле и игра продолжается
         else:
             print(f'Клетка {turn} занята либо отсуствует. Попробуйте снова.')
 
+# Ход компьютера
 def computer(field, mark):
     print('Ход компьютера!')
     while True:
@@ -51,10 +53,10 @@ def computer(field, mark):
             print_field(field)
             return field, True # поле и игра продолжается
 
+# Функция запуска и перезапуска игры
 def game():
     print("Определяем кто ходит первым!")
     whoStart = random.randint(0, 1)
-    # print(whoStart)
     field = [i for i in range(1, 10)]
     go = True
     # надо как-то переработать эту часть - start
