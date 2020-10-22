@@ -36,7 +36,6 @@ class Database:
 
     def get_db_item(self, index):
         if isinstance(index, int) and 0 <= index < len(self.db):
-            # print(self.db[index])
             return self.db[index]
         else:
             print('Вы ввели неправильный индекс.')
@@ -50,19 +49,3 @@ class Database:
 
     def get_db(self):
         return self.db
-
-# тут как бы происходит импорт данных о покупателях откуда-то
-client_list = [
-    {
-     "name": 'Иван Петров',
-     "balance": 500,
-    },
-    {
-     "name": "Никита Соболев",
-     "balance": 122,
-    },
-    {
-     "name": "Иван Иваныч",
-     "balance": 100,
-    },
-]
