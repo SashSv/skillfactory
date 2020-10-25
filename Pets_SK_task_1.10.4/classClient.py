@@ -49,3 +49,4 @@ class Database:
 
     def get_db(self):
         return self.db
+
