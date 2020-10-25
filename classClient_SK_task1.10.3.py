@@ -2,7 +2,7 @@
 class Client:
     def __init__(self, name='', balance=0):
         self.name = name
-        self.balance = 0
+        self.balance = balance
 
     def init_from_dict(self, client_dict):
         self.name = client_dict.get('name')
@@ -51,6 +51,32 @@ class Database:
     def get_db(self):
         return self.db
 
+# создаю класс наследник, который будет работать со списком объектов,
+# а не словарей
+class Database2(Database):
+    # методы, которые наследуются без изменений
+    # __init__, add_db, get_db_item,
+
+    # Методы, которые меняются
+    def add_db_item(self, name = "", value = 0):
+        customer = Client(name, value)
+        self.db.append(customer)
+
+    # Посмотреть инфо о выбранном объекте в человеческом виде
+    def get_item_stats(self, index):
+        if isinstance(index, int) and 0 <= index < len(self.db):
+            print(self.db[index].get_client())
+
+    # Создание базы с объектами Client на основе списка
+    def create_db_from(self, lst):
+        self.db = []
+        customer = Client()
+        for i in lst:
+            customer.init_from_dict(i)
+            print(i)
+            self.db.append(customer)
+
+
 # тут как бы происходит импорт данных о покупателях откуда-то
 client_list = [
     {
@@ -67,26 +93,7 @@ client_list = [
     },
 ]
 
-# ниже идет код чисто для тестирования функционала на миниальную работоспособность
-
-database = Database() # создаем экземпляр базы
-database.add_db(client_list) # загружаем старый список клиентов
-
-customer = Client() # создаем экземпляр клиента
-customer.init_from_dict(database.get_db_item(0)) # загружаем туда клиента из базы для работы с ним
-
-print(f'Клиент «{customer.get_name()}». Баланс: {customer.get_balance()} руб.')
-
-customer.change_name('Игорь') # меняем имя клиента
-customer.change_balance(100) # меняем баланс клиента
-
-print(f'Клиент «{customer.get_name()}». Баланс: {customer.get_balance()} руб.')
-
-database.change_db_item(0, customer.get_client()) # загружаем изменения в базу
-database.get_db_item(0) # изменения появились в базе
-
-client_list_2 = database.get_db() # получили на выход обновленный список - можем отправить откуда он пришел к нам
-
-# и проверка что на входе и выходе лежат разные штуки
-print(client_list is client_list_2)
-
+database = Database2()
+database.create_db_from(client_list)
+database.add_db_item('Федор Иванович', 100)
+database.get_item_stats(3)
