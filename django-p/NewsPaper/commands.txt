@@ -1,0 +1,3 @@
+pip3 install django - установка django
+django-admin startproject ProjectName - создание проекта
+python manage.py startapp rest - создаем новое приложение
