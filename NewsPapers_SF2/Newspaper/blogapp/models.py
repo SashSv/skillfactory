@@ -7,13 +7,15 @@ class Author(models.Model):
     author = models.OneToOneField(User, on_delete=models.CASCADE, unique = True)
     author_raiting = models.IntegerField(default = 0)
 
+
     def update_raiting(self):
         posts = Post.objects.filter(author=self.id) # все посты автора
         post_raiting = sum([r.post_raiting * 3 for r in posts]) # рейтинг каждого поста автора умножен на 3
         comment_raiting = sum([r.comment_raiting for r in Comment.objects.filter(author=self.author)]) # сумма лайков/дислайков к комментам автора
         all_to_post_comment_raiting = sum([r.comment_raiting for r in Comment.objects.filter(post__in = posts)]) # сумма лайков/дислайков всех комментов к постам автора
-        self.author_raiting = self.author_raiting + (post_raiting + comment_raiting + all_to_post_comment_raiting)
+        self.author_raiting = post_raiting + comment_raiting + all_to_post_comment_raiting
         self.save()
+
 
     def __str__(self):
         return self.author.username
