@@ -41,9 +41,13 @@ INSTALLED_APPS = [
     'App01',
     'restSF',
     'blogapp',
-    # 'webinar',
+    'simpleapp',
 
+    'django.contrib.sites',
+    'django.contrib.flatpages'
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
