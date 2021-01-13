@@ -1,0 +1,21 @@
+{% load custom_filters %}
+<div class="card mb-4">
+    <div class="card-header">
+        {{ post.created_time|date:'M d Y - h:m' }}
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{ post.header|censor }}</h5>
+        <p class="card-text">{{ post.article_text|censor|safe|truncatewords:50 }}</p>
+        <a href="{{ post.get_absolute_url }}" class="btn btn-primary">Читать</a>
+        <a href="{{ post.post_update_url }}" class="btn btn-primary">Редактировать</a>
+        <a href="{{ post.post_delete_url }}" class="btn btn-danger">Удалить</a>
+    </div>
+    <div class="card-footer text-muted">
+        {% if post.category.all %}
+            <b>Категории: </b>
+            {% for category in post.category.all %}
+                {{ category.name }}
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>

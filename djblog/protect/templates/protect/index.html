@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+
+{% block title %}
+    Личная страница {{ post.header }} - {{ block.super }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="card mt-2 p-4">
+
+        <div class="card-body">
+            <h1 class="mb-4">Страница пользователя {{ request.user.username }}</h1>
+            <h3 class="mb-3">Персональная информация о пользователе {{ request.user.username }}</h3>
+
+            <a href="sign/logout/" class="btn btn-primary mt-2">Выйти</a>
+
+        </div>
+
+    </div>
+
+{% endblock %}

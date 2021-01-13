@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+
+{% block title %}
+    {{ post_detail.header }} - {{ block.super }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="card mt-2 p-4">
+            <div><span class="pub-info">Дата публикации: {{ post_detail.created_time|date:'d M Y - h:m' }}</span></div>
+
+        <h1 class="mb-4">{{ post_detail.header|censor }}</h1>
+        {{ post_detail.article_text|censor|safe }}
+
+        <div class="card-body">
+            <a href="{% url 'posts_list' %}" class="btn btn-primary">Ко всем постам</a>
+        </div>
+
+    </div>
+
+{% endblock %}

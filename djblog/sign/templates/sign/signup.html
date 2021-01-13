@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+{% load bootstrap %}
+
+{% block title %}
+    Регистрация - {{ block.super }}
+{% endblock %}
+
+{% block content %}
+    <h1>Регистрация нового пользователя</h1>
+
+    <form action="{% url 'signup' %}" method="POST">
+        {% csrf_token %}
+        {{ form.as_p}}
+    <button type="submit" class="btn btn-primary mt-2">Создать пользователя</button>
+
+    </form>
+{% endblock %}

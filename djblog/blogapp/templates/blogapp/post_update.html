@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+{% load bootstrap %}
+
+{% block title %}
+    Add post - {{ block.super }}
+{% endblock %}
+
+{% block content %}
+
+    <form action="{{post.post_update_url}}" method="POST">
+        {% csrf_token %}
+        {{ form|bootstrap }}
+    <button type="submit" class="btn btn-primary mt-2">Редактировать</button>
+    </form>
+
+{% endblock %}

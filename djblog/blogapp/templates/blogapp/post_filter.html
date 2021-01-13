@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+{% load bootstrap %}
+
+{% block title %}
+    All posts - {{ block.super }}
+{% endblock %}
+
+{% block content %}
+    <div class="mb-5">
+        <form method="GET">
+            {{ filter.form|bootstrap }}
+            <button type="submit" class="btn btn-primary mt-2">Найти</button>
+        </form>
+    </div>
+
+    {% for post in filter.qs %}
+        {% include 'blogapp/includes/post_preview_template.html' %}
+    {% endfor %}
+
+{% endblock %}

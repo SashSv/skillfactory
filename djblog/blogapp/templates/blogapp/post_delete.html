@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+
+{% block title %}
+    Удаление поста {{ post.header }} - {{ block.super }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="card mt-2 p-4">
+
+        <div class="card-body">
+            <h1 class="mb-4">Удаление поста</h1>
+            <h3 class="mb-3">Вы точно хотите удалить пост "{{ post.header }}"?</h3>
+            <form method="POST">
+                {% csrf_token %}
+                <a href="{{ post.get_absolute_url }}" class="btn btn-primary mt-2">К посту</a>
+                <a href="{% url 'posts_list' %}" class="btn btn-primary mt-2">Ко всем постам</a>
+                <button type="submit" class="btn btn-danger mt-2">Удалить</button>
+            </form>
+
+        </div>
+
+    </div>
+
+{% endblock %}
