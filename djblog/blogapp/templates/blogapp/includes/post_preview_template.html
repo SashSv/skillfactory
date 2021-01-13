@@ -7,8 +7,14 @@
         <h5 class="card-title">{{ post.header|censor }}</h5>
         <p class="card-text">{{ post.article_text|censor|safe|truncatewords:50 }}</p>
         <a href="{{ post.get_absolute_url }}" class="btn btn-primary">Читать</a>
-        <a href="{{ post.post_update_url }}" class="btn btn-primary">Редактировать</a>
-        <a href="{{ post.post_delete_url }}" class="btn btn-danger">Удалить</a>
+
+        {% if not is_not_author %}
+            <a href="{{ post.post_update_url }}" class="btn btn-primary">Редактировать</a>
+        {% endif %}
+        {% if request.user.is_staff %}
+            <a href="{{ post.post_delete_url }}" class="btn btn-danger">Удалить</a>
+        {% endif %}
+
     </div>
     <div class="card-footer text-muted">
         {% if post.category.all %}

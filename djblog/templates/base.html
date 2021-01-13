@@ -15,102 +15,106 @@
 
     <title>
         {% block title %}
+            {% block head_title %}{% endblock %}
             Sasha Blog
+
         {% endblock %}
     </title>
 </head>
 <body>
-
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="/">Navbar</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-
-                <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'posts_list' %}">Блог</a>
-                </li>
-
-                {% if not request.user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="btn btn-success signup" href="{% url 'login' %}" tabindex="-1" aria-disabled="true">Вход</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">Регистрация</a>
-                    </li>
-                {% endif %}
-                {% if request.user.is_authenticated %}
+{% block body %}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Navbar</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
                     <li class="nav-item">
-                        <a href="{% url 'logout' %}" class="btn btn-primary signup">Выйти</a>
+                        <a class="nav-link active" href="{% url 'posts_list' %}">Блог</a>
                     </li>
-                {% endif %}
+
+                    {% if not request.user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="btn btn-success signup" href="/accounts/login/" tabindex="-1"
+                               aria-disabled="true">Вход</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/accounts/signup/">Регистрация</a>
+                        </li>
+                    {% endif %}
+                    {% if request.user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/">Личный кабинет</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{% url 'logout' %}" class="btn btn-primary signup">Выйти</a>
+                        </li>
+                    {% endif %}
 
 
-            </ul>
-            <form class="d-flex">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
+                </ul>
+                <form class="d-flex">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
-<div class="container mt-2">
-    <div class="row">
-        <div class="col-6 offset-md-3">
+    <div class="container mt-2">
+        <div class="row">
+            <div class="col-6 offset-md-3">
 
-            {% block body %}
                 {% block content %}
-                {% endblock content %}
-                {% block extra_body %}
-                {% endblock extra_body %}
+                {% endblock %}
 
-            {% endblock body %}
+                {% if is_paginated %}
+                    <nav aria-label="...">
+                        <ul class="pagination">
 
-
-
-            {% if is_paginated %}
-                <nav aria-label="...">
-                    <ul class="pagination">
-
-                        {% if page_obj.has_previous %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" tabindex="-1"
-                                   aria-disabled="true">Previous</a>
-                            </li>
-                        {% endif %}
-
-
-                        {% for page in page_obj.paginator.page_range %}
-
-                            {% if page_obj.number == page %}
-                                <li class="page-item active" aria-current="page">
-                                    <a class="page-link" href="?page={{ page }}">{{ page }}</a>
-                                </li>
-                            {% elif page > page_obj.number|add:-2 and page < page_obj.number|add:2 %}
-                                <li class="page-item"><a class="page-link" href="?page={{ page }}">{{ page }}</a>
+                            {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}" tabindex="-1"
+                                       aria-disabled="true">Previous</a>
                                 </li>
                             {% endif %}
-                        {% endfor %}
 
-                        {% if page_obj.has_next %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
-                            </li>
-                        {% endif %}
 
-                    </ul>
-                </nav>
-            {% endif %}
+                            {% for page in page_obj.paginator.page_range %}
 
+                                {% if page_obj.number == page %}
+                                    <li class="page-item active" aria-current="page">
+                                        <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+                                    </li>
+                                {% elif page > page_obj.number|add:-2 and page < page_obj.number|add:2 %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ page }}">{{ page }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                                </li>
+                            {% endif %}
+
+                        </ul>
+                    </nav>
+                {% endif %}
+
+            </div>
         </div>
     </div>
-</div>
 
+{% endblock %}
+
+{% block extra_body %}
+{% endblock %}
 </body>
 </html>

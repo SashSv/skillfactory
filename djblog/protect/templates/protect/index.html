@@ -14,6 +14,9 @@
             <h3 class="mb-3">Персональная информация о пользователе {{ request.user.username }}</h3>
 
             <a href="sign/logout/" class="btn btn-primary mt-2">Выйти</a>
+            {% if is_not_author %}
+            <a href="sign/upgrade/" class="btn btn-warning mt-2">Premium</a>
+            {% endif %}
 
         </div>
 
