@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+
+{% block title %}
+All categories - {{ block.super }}
+{% endblock %}
+
+{% block content %}
+    <div class="card mb-4">
+    <div class="card-header">
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">Хотите создать новый пост? Не проблема! <a href="{% url 'post_add' %}" class="btn btn-success">Создать</a></h5>
+
+    </div>
+    <div class="card-footer text-muted">
+    </div>
+</div>
+
+    {% for category in category_list %}
+
+        <p>{{ category.name }} - {{ request.user.username }} - {% if category not in user %}<a href="sub/{{ category.id }}">Подписаться</a>{% endif %}</p>
+
+
+
+    {% endfor %}
+
+{% endblock %}
