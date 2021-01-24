@@ -1,6 +1,7 @@
 from django.db import models
-
 from django.core.validators import MinValueValidator
+
+from django.shortcuts import reverse
 
 # Create your models here.
 
@@ -29,9 +30,20 @@ class Product(models.Model):
     def __str__(self):
         return f'{self.name.title()}: {self.description[:20]}'
 
+    def get_absolute_url(self):
+        return reverse('product_detail', kwargs={'pk': self.pk})
+
+    class Meta:
+        verbose_name = 'Продукт'
+        verbose_name_plural = 'Продукты'
+
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return f'{self.name.title()}'
+
+    class Meta:
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'

@@ -5,10 +5,46 @@ from .filters import PostFilter
 from .forms import PostForm
 from django.shortcuts import redirect
 
-from django.contrib.auth.mixins import PermissionRequiredMixin
 
+
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.contrib.auth.decorators import login_required
+
+from django.contrib.sites.shortcuts import get_current_site
+
+# test for celery
+from django.http import HttpResponse
+from .tasks import hello, printer
+from django.views import View
 
 # Create your views here.
+
+class IndexView(View):
+    def get(self, request):
+        printer.delay(10)
+        hello.delay()
+        return HttpResponse('Hello!')
+
+
+@login_required
+def category_subscribe(request, cat_id):
+    category = Category.objects.get(id=cat_id)
+    subscribers_list = User.objects.all().filter(categories=category)
+
+    if request.user not in subscribers_list:
+        category.subscribers.add(request.user)
+
+    response = redirect('/news/categories/')
+    return response
+
+
+
+def post_add_redirect(request):
+    response = redirect('/accounts/login/')
+    return response
+
 
 class PostList(ListView):
     model = Post
@@ -20,6 +56,20 @@ class PostList(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['is_not_author'] = not self.request.user.groups.filter(name='author').exists()
+
+        return context
+
+
+
+class CategoryPostList(ListView):
+    model = Category
+    template_name = 'blogapp/category_list.html'
+    context_object_name = 'category_list'
+    ordering = ['name']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user'] = Category.objects.all().filter(subscribers=self.request.user)
         return context
 
 
@@ -51,6 +101,34 @@ class PostAdd(PermissionRequiredMixin, PostList):
 
         if post.is_valid():
             new_post = post.save()
+            categories = Category.objects.filter(posts=new_post)
+            subscribers_email_list = []
+
+            for cat in categories:
+                cat_subscribers = list(User.objects.filter(categories=cat))
+                subscribers_email_list += cat_subscribers
+
+            for user in set(subscribers_email_list):
+
+                html_content = render_to_string(
+                    'blogapp/new_post_mail.html',
+                    {
+                        'new_post': new_post,
+                        'user': user,
+                        'site_domain': get_current_site(request).domain, # подставляем адрес домена автоматом в письмо
+                    }
+                )
+
+                msg = EmailMultiAlternatives(
+                    subject = f'{new_post.header[:20]} - Sasha blog',
+                    body = '',
+                    from_email='sendme.email@yandex.ru',
+                    to=[user.email, ]
+                )
+
+                msg.attach_alternative(html_content, 'text/html')
+                msg.send()
+
             return redirect(new_post)
 
 
@@ -68,6 +146,7 @@ class PostUpdate(PermissionRequiredMixin, UpdateView):
     def get_object(self, **kwargs):
         id = self.kwargs.get('pk')
         return Post.objects.get(pk=id)
+
 
 class PostDeleteView(PermissionRequiredMixin, DeleteView):
     template_name = 'blogapp/post_delete.html'

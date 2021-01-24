@@ -1,12 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'simpleapp\default.html' %}
+{% load custom_filters %}
+{% block title %}
+    Все продукты
+{% endblock %}
+
 {% block content %}
-{{ products }}
+<h1>Products</h1>
+
+<form method="GET">
+    {{ filter.form }} <!-- Форму от фильтров за нас сделает django. А вот кнопку, увы придётся делать самому -->
+    <input type="submit" value="Найти">
+</form>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Description</th>
+        <th scope="col">Category</th>
+        <th scope="col">Price</th>
+        <th scope="col">Quantity</th>
+        <th scope="col">Link</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for product in filter.qs %}
+
+    <tr>
+        <th scope="row">{{ product.name }}</th>
+        <td>{{ product.description }}</td>
+        <td>{{ product.category.name }}</td>
+        <td>{{ product.price }}</td>
+        <td>{{ product.quantity }}</td>
+        <td><a href="{{product.get_absolute_url}}">Link</a></td>
+    </tr>
+    {% endfor %}
+
+    </tbody>
+</table>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form }} <!-- Теперь нам нужна только готовая форма и кнопка -->
+    <input type="submit" value="Добавить товар">
+</form>
+
+
 {% endblock content%}
-</body>
-</html>

@@ -44,7 +44,9 @@ INSTALLED_APPS = [
     'simpleapp',
 
     'django.contrib.sites',
-    'django.contrib.flatpages'
+    'django.contrib.flatpages',
+
+    'django_filters',
 ]
 
 SITE_ID = 1
@@ -64,7 +66,7 @@ ROOT_URLCONF = 'Newspaper.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR), "App01/templates/App01"],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

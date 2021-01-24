@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-import datetime
 from django.shortcuts import reverse
 
 # Create your models here.
@@ -27,6 +26,7 @@ class Author(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length = 255, unique = True)
+    subscribers = models.ManyToManyField(User, blank=True, related_name='categories')
 
     def __str__(self):
         return self.name
@@ -48,11 +48,20 @@ class Post(models.Model):
     ]
     type = models.CharField(max_length=2, choices = POST_TYPES, default = NEWS)
     created_time = models.DateTimeField(auto_now_add = True)
-    category = models.ManyToManyField(Category, through = 'PostCategory',)
+    category = models.ManyToManyField(Category, related_name='posts', blank=True)
     header = models.CharField(max_length = 255)
     article_text = models.TextField()
     post_raiting = models.IntegerField(default = 0)
-    
+
+    @property
+    def short_header(self):
+        if len(self.header) > 50:
+            return self.header[:50]+'...'
+        else:
+            return self.header
+
+
+
     def post_delete_url(self):
         return reverse('post_delete_url', kwargs={'pk': self.pk})
 
@@ -61,7 +70,7 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse('post_detail', kwargs={'pk': self.pk})
-        
+
 
     def preview(self):
         preview = self.article_text[:129] + '...'
@@ -84,18 +93,18 @@ class Post(models.Model):
 
 
 
-class PostCategory(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-
-    def __str__(self):
-        result = f'{self.category.name} - {self.post.header[:15]}'
-        # return self.category.name
-        return result
-
-    class Meta:
-        verbose_name = 'ПостКатегория'
-        verbose_name_plural = 'ПостКатегории'
+# class PostCategory(models.Model):
+#     post = models.ForeignKey(Post, on_delete=models.CASCADE)
+#     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+#
+#     def __str__(self):
+#         result = f'{self.category.name} - {self.post.header[:15]}'
+#         return result
+#
+#     class Meta:
+#         db_table = 'blogapp_post_category'
+#         verbose_name = 'ПостКатегория'
+#         verbose_name_plural = 'ПостКатегории'
 
 
 class Comment(models.Model):

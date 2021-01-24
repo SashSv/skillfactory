@@ -5,6 +5,7 @@ from django import forms
 from allauth.account.forms import SignupForm
 from django.contrib.auth.models import Group
 
+from blogapp.models import *
 
 class BaseRegisterForm(UserCreationForm):
     email = forms.EmailField(label = "Email")
@@ -38,3 +39,5 @@ class BasicSignupForm(SignupForm):
         basic_group = Group.objects.get(name='common')
         basic_group.user_set.add(user)
         return user
+
+
