@@ -38,13 +38,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'blogapp',
+
+    'blogapp.apps.BlogappConfig',
+
     'django_filters',
     'bootstrapform',
     'sign',
     'protect',
 
     'django.contrib.sites',
+
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -53,8 +56,10 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
 
     'crispy_forms',
+    'django_apscheduler',
 ]
 
+DEFAULT_FROM_EMAIL = 'sendme.email@yandex.ru'
 SITE_ID = 1
 
 MIDDLEWARE = [
@@ -93,6 +98,8 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+# all-auth settings
+
 LOGIN_URL = 'accounts/login/'
 LOGIN_REDIRECT_URL = '/'
 
@@ -100,9 +107,37 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'none'
-
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
 ACCOUNT_FORMS = {'signup': 'sign.forms.BasicSignupForm'}
+
+EMAIL_HOST = 'smtp.yandex.ru' # адрес сервера Яндекс-почты для всех один и тот же
+EMAIL_PORT = 465 # порт smtp сервера тоже одинаковый
+EMAIL_HOST_USER = 'sendme.email' # ваше имя пользователя, например если ваша почта user@yandex.ru, то сюда надо писать user, иными словами, это всё то что идёт до собаки
+EMAIL_HOST_PASSWORD = 'DjsuP292' # пароль от почты
+EMAIL_USE_SSL = True # Яндекс использует ssl, подробнее о том, что это, почитайте на Википедии, но включать его здесь обязательно
+
+ADMINS = [
+    ('admin', 'a.bagaev1989@gmail.com'),
+    # список всех админов в формате ('имя', 'их почта')
+]
+
+MANAGERS = [
+    ('admin', 'a.bagaev1989@gmail.com'),
+    ('nick', 'avtosale.spb2020@gmail.com')
+]
+
+SERVER_EMAIL = 'sendme.email@yandex.ru'
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+APSCHEDULER_RUN_NOW_TIMEOUT = 25
+
+
+# redis + celery settings
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
 
 
 WSGI_APPLICATION = 'djblog.wsgi.application'
