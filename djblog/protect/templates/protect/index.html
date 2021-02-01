@@ -15,11 +15,17 @@
 
             <a href="sign/logout/" class="btn btn-primary mt-2">Выйти</a>
             {% if is_not_author %}
-            <a href="sign/upgrade/" class="btn btn-warning mt-2">Premium</a>
+                <a href="sign/upgrade/" class="btn btn-warning mt-2">Premium</a>
             {% endif %}
 
         </div>
+        <h3 class="mb-3">Управление подпиской на категории</h3>
+        {% for category in categories_list %}
 
+            <p>{{ category.name }} - {% if category not in user_subscribed_categories %}
+                <a href="news/categories/sub/{{ category.id }}">Подписаться</a>{% else %}Вы подписаны{% endif %}</p>
+
+        {% endfor %}
     </div>
 
 {% endblock %}

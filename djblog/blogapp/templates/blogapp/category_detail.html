@@ -8,6 +8,14 @@
 {% block content %}
     <div class="card mb-4">
         <div class="card-header">
+            <h1 class="mb-3">Рубрика "{{ category_detail.name }}"
+
+            {% if request.user.is_authenticated and request.user not in category_detail.subscribers.all%}
+
+                <a href="sub/{{ category_detail.id }}" class="btn btn-success"> Подписаться</a>
+
+                {% endif %}
+            </h1>
         </div>
         <div class="card-body">
             <h5 class="card-title">Хотите создать новый пост? Не проблема! <a href="{% url 'post_add' %}"
@@ -18,8 +26,7 @@
         </div>
     </div>
 
-        {% for category in category_list %}
-            <span class="shadow-sm p-3 mb-5 bg-white rounded"><a href="{{category.get_absolute_url}}">{{ category.name }}</a></span>
-
-        {% endfor %}
+    {% for post in category_detail.posts.all %}
+        {% include 'blogapp/includes/post_preview_template.html' %}
+    {% endfor %}
 {% endblock %}
